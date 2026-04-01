@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exclusive Reward Portal</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            cursor: default;
+        }
+        
+        .container {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            text-align: center;
+            position: relative;
+            animation: slideIn 0.8s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .stars {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3em;
+        }
+        
+        h1 {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .divider {
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+            border-radius: 2px;
+            margin: 25px 0;
+        }
+        
+        .congrats {
+            color: #333;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .highlight {
+            color: #e74c3c;
+            font-weight: 700;
+        }
+        
+        ul {
+            list-style: none;
+            margin: 25px 0;
+        }
+        
+        li {
+            background: #f8f9fa;
+            margin: 12px 0;
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 5px solid #4ecdc4;
+            text-align: left;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        li:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        li::before {
+            content: "✔️";
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2em;
+        }
+        
+        li span {
+            margin-left: 25px;
+            display: block;
+        }
+        
+        .claim-btn {
+            background: linear-gradient(45deg, #ff6b6b, #f7931e);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            font-size: 1.4em;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(255,107,107,0.4);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .claim-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255,107,107,0.6);
+        }
+        
+        .claim-btn:active {
+            transform: translateY(0);
+        }
+        
+        .timer {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            margin: 20px 0;
+            font-size: 1.2em;
+            font-weight: 600;
+            box-shadow: 0 5px 20px rgba(231,76,60,0.4);
+            animation: shake 0.5s infinite;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 2px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-weight: 600;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.5s ease;
+        }
+        
+        .footer.reveal {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .gotcha {
+            color: #e74c3c;
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            animation: bounce 1s ease;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+        
+        .signature {
+            color: #666;
+            font-style: italic;
+        }
+        
+        /* TRICKY FEATURES */
+        .fake-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.1s ease;
+            box-shadow: 0 0 10px rgba(255,107,107,0.8);
+        }
+        
+        body.disabled-scroll {
+            overflow: hidden;
+        }
+        
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10000;
+        }
+    </style>
+</head>
+<body>
+    <div class="fake-cursor" id="fakeCursor"></div>
+    
+    <div class="container">
+        <div class="stars">🌟✨</div>
+        
+        <h1>YOUR EXCLUSIVE REWARD PORTAL</h1>
+        
+        <div class="divider"></div>
+        
+        <div class="congrats">
+            🎉 <span class="highlight">Congratulations!</span> 🎉<br>
+            Out of <span id="participantCount">12,847</span> participants,<br>
+            <strong>YOU</strong> have been randomly selected!
+        </div>
+        
+        <p style="color: #666; margin-bottom: 25px;">
+            💎 This is your chance to claim something <em>truly amazing</em>…
+        </p>
+        
+        <div class="divider"></div>
+        
+        <h3 style="color: #333; margin-bottom: 20px;">🎁 What’s inside?</h3>
+        
+        <ul>
+            <li><span>A <strong>surprise premium gift</strong> worth $497</span></li>
+            <li><span><strong>Instant access</strong> — no waiting</span></li>
+            <li><span><strong>100% FREE</strong> (today only!)</span></li>
+        </ul>
+        
+        <div class="divider"></div>
+        
+        <button class="claim-btn" id="claimBtn">
+            🔓 CLAIM MY REWARD NOW
+        </button>
+        
+        <div class="timer" id="timer">
+            ⏳ Hurry! Expires in <span id="countdown">14</span> seconds…
+        </div>
+        
+        <div class="warning">
+            ⚠️ <strong>Do not refresh</strong> or you may lose your spot!
+        </div>
+        
+        <div class="footer" id="footer">
+            <div class="gotcha">😄🎭 APRIL FOOL! 🎭😄</div>
+            <div class="signature">— By Michael</div>
+            <p style="color: #666; margin-top: 15px;">
+                💬 Got you! Share the laugh with your friends 😆
+            </p>
+        </div>
+    </div>
+    
+    <div class="confetti" id="confetti"></div>
+
+    <script>
+        // TRICK 1: Fake countdown timer
+        let timeLeft = 14;
+        const countdownEl = document.getElementById('countdown');
+        const timerInterval = setInterval(() => {
+            timeLeft--;
+            countdownEl.textContent = timeLeft;
+            if (timeLeft <= 0) {
+                timeLeft = 14; // Reset loop
+            }
+        }, 1000);
+
+        // TRICK 2: Disable scroll on hover
+        document.addEventListener('mousemove', (e) => {
+            document.body.classList.add('disabled-scroll');
+            setTimeout(() => {
+                document.body.classList.remove('disabled-scroll');
+            }, 100);
+        });
+
+        // TRICK 3: Fake cursor follows mouse
+        const fakeCursor = document.getElementById('fakeCursor');
+        document.addEventListener('mousemove', (e) => {
+            fakeCursor.style.left = e.clientX + 'px';
+            fakeCursor.style.top = e.clientY + 'px';
+        });
+
+        // TRICK 4: Dynamic participant count
+        const participantCount = document.getElementById('participantCount');
+        setInterval(() => {
+            const current = parseInt(participantCount.textContent);
+            participantCount.textContent = current + Math.floor(Math.random() * 50) + 1;
+        }, 3000);
+
+        // TRICK 5: Button click = BIG REVEAL
+        const claimBtn = document.getElementById('claimBtn');
+        const footer = document.getElementById('footer');
+        
+        claimBtn.addEventListener('click', () => {
+            // Disable button
+            claimBtn.style.pointerEvents = 'none';
+            claimBtn.textContent = 'REVEALING...';
+            claimBtn.style.background = 'linear-gradient(45deg, #27ae60, #2ecc71)';
+            
+            // Show reveal
+            setTimeout(() => {
+                footer.classList.add('reveal');
+                launchConfetti();
+                playSound();
+                
+                // Reset button after reveal
+                setTimeout(() => {
+                    claimBtn.textContent = 'GOTCHA! 😂';
+                    claimBtn.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+                }, 2000);
+            }, 500);
+        });
+
+        // TRICK 6: Confetti explosion
+        function launchConfetti() {
+            const confetti = document.getElementById('confetti');
+            for (let i = 0; i < 100; i++) {
+                const confettiPiece = document.createElement('div');
+                confettiPiece.style.position = 'fixed';
+                confettiPiece.style.left = Math.random() * 100 + 'vw';
+                confettiPiece.style.top = '-10px';
+                confettiPiece.style.width = Math.random() * 10 + 5 + 'px';
+                confettiPiece.style.height = confettiPiece.style.width;
+                confettiPiece.style.background = `hsl(${Math.random() * 360}, 70%, 60%)`;
+                confettiPiece.style.pointerEvents = 'none';
+                confettiPiece.style.zIndex = '10001';
+                confettiPiece.style.animation = `confetti-fall ${Math.random() * 3 + 2}s linear forwards`;
+                confetti.appendChild(confettiPiece);
+                
+                setTimeout(() => confettiPiece.remove(), 5000);
+            }
+        }
+
+        // Add confetti animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes confetti-fall {
+                to {
+                    transform: translateY(100vh) rotate(720deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // TRICK 7: Fake success sound (browser beep)
+        function playSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+
+        // TRICK 8: Prevent right-click & F12
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                e.preventDefault();
+                alert('Nice try! 😏');
+            }
+        });
+
+        // TRICK 9: Fake loading on refresh warning
+        window.addEventListener('beforeunload', (e) => {
+            e.preventDefault();
+            e.returnValue = 'You might lose your reward spot!';
+        });
+    </script>
+</body>
+</html>
